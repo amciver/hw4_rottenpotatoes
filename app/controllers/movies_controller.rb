@@ -40,6 +40,16 @@ class MoviesController < ApplicationController
     # default: render 'new' template
   end
 
+  def similar
+    m = Movie.find_by_title(params[:title])
+    if !m.director.blank?
+      @movies = Movie.find_all_by_director(m.director)
+    else
+      flash[:notice] = "'#{params[:title]}' has no director info."
+      redirect_to movies_path
+    end
+  end
+
   def create
     @movie = Movie.create!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully created."
