@@ -40,13 +40,13 @@ class MoviesController < ApplicationController
     # default: render 'new' template
   end
 
-  def similar
-    m = Movie.find_by_title(params[:title])
-    if !m.director.blank?
-      @movies = Movie.find_all_by_director(m.director)
-    else
-      flash[:notice] = "'#{params[:title]}' has no director info."
+  def find_similar
+    movie = Movie.find_by_title(params[:title])
+    if movie.director.blank?
+      flash[:notice] = "'#{movie.title}' has no director info."
       redirect_to movies_path
+    else
+      @movies = Movie.find_similar_movies_by_director(movie.director)
     end
   end
 
